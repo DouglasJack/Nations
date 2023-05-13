@@ -12,6 +12,7 @@ import org.spongepowered.api.entity.living.monster.Monster;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.block.CollideBlockEvent;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.event.entity.InteractEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
@@ -26,8 +27,6 @@ import com.arckenver.nations.LanguageHandler;
 
 public class InteractPermListener
 {
-<<<<<<< Updated upstream
-=======
 
 	@Listener
 	public void onCollideBlock(CollideBlockEvent event, @First Player player)
@@ -54,7 +53,6 @@ public class InteractPermListener
 		}
 	}
 
->>>>>>> Stashed changes
 	@Listener(order=Order.FIRST, beforeModifications = true)
 	public void onInteract(InteractBlockEvent event, @First Player player)
 	{
@@ -67,7 +65,7 @@ public class InteractPermListener
 			return;
 		}
 		Optional<ItemStack> optItem = player.getItemInHand(HandTypes.MAIN_HAND);
-		if (optItem.isPresent() && (ConfigHandler.isWhitelisted("use", optItem.get().getItem().getId()) || optItem.get().getItem().equals(ItemTypes.GOLDEN_AXE) && ConfigHandler.getNode("others", "enableGoldenAxe").getBoolean(true)))
+		if (optItem.isPresent() && (ConfigHandler.isWhitelisted("use", optItem.get().getType().getId()) || optItem.get().getType().equals(ItemTypes.GOLDEN_AXE) && ConfigHandler.getNode("others", "enableGoldenAxe").getBoolean(true)))
 			return;
 		event.getTargetBlock().getLocation().ifPresent(loc -> {
 			Nation nation = DataHandler.getNationOfPlayer(player.getUniqueId());

@@ -13,11 +13,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-<<<<<<< Updated upstream
-=======
 import com.arckenver.nations.channel.AdminSpyMessageChannel;
 import com.arckenver.nations.object.*;
->>>>>>> Stashed changes
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.effect.particle.ParticleEffect;
@@ -55,12 +52,8 @@ public class DataHandler
 	private static Hashtable<UUID, UUID> markJobs;
 	private static ArrayList<Request> inviteRequests;
 	private static ArrayList<Request> joinRequests;
-<<<<<<< Updated upstream
-	private static NationMessageChannel spyChannel;
-=======
 	private static AdminSpyMessageChannel spyChannel;
 	public static Hashtable<UUID, War> wars;
->>>>>>> Stashed changes
 
 	public static void init(File rootDir)
 	{
@@ -75,7 +68,7 @@ public class DataHandler
 	public static void load()
 	{
 		nationsDir.mkdirs();
-		nations = new Hashtable<UUID, Nation>();
+		nations = new Hashtable<>();
 		for (File f : nationsDir.listFiles())
 		{
 			if (f.isFile() && f.getName().matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\.json"))
@@ -94,16 +87,6 @@ public class DataHandler
 			}
 		}
 		calculateWorldChunks();
-<<<<<<< Updated upstream
-		lastNationWalkedOn = new HashMap<UUID, Nation>();
-		lastZoneWalkedOn = new HashMap<UUID, Zone>();
-		firstPoints = new Hashtable<UUID, Point>();
-		secondPoints = new Hashtable<UUID, Point>();
-		markJobs = new Hashtable<UUID, UUID>();
-		inviteRequests = new ArrayList<Request>();
-		joinRequests = new ArrayList<Request>();
-		spyChannel = new NationMessageChannel();
-=======
 		lastNationWalkedOn = new HashMap<>();
 		lastZoneWalkedOn = new HashMap<>();
 		firstPoints = new Hashtable<>();
@@ -119,7 +102,6 @@ public class DataHandler
 			}
 		}
 
->>>>>>> Stashed changes
 	}
 
 	public static void save()
@@ -426,7 +408,7 @@ public class DataHandler
 		{
 			if (!worldChunks.containsKey(r.getWorld()))
 			{
-				worldChunks.put(r.getWorld(), new Hashtable<Vector2i, ArrayList<Nation>>());
+				worldChunks.put(r.getWorld(), new Hashtable<>());
 			}
 			Hashtable<Vector2i, ArrayList<Nation>> chunks = worldChunks.get(r.getWorld());
 			for (int i = IntMath.divide(r.getMinX(), 16, RoundingMode.FLOOR); i < IntMath.divide(r.getMaxX(), 16, RoundingMode.FLOOR) + 1; i++)
@@ -436,7 +418,7 @@ public class DataHandler
 					Vector2i vect = new Vector2i(i, j);
 					if (!chunks.containsKey(vect))
 					{
-						chunks.put(vect, new ArrayList<Nation>());
+						chunks.put(vect, new ArrayList<>());
 					}
 					if (!chunks.get(vect).contains(nation))
 					{

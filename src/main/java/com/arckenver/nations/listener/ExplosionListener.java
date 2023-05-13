@@ -66,20 +66,12 @@ public class ExplosionListener
 	@Listener(order=Order.FIRST, beforeModifications = true)
 	public void onExplosion(ExplosionEvent.Post event)
 	{
-		if (!ConfigHandler.getNode("worlds").getNode(event.getTargetWorld().getName()).getNode("enabled").getBoolean())
-		{
-			return;
-		}
-		if (event.getTransactions().size() > 100)
-		{
-            event.setCancelled(true);
-		}
+//		if (event.getTransactions().size() > 100)
+//		{
+//            event.setCancelled(true);
+//		}
 		for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
             BlockSnapshot blockSnapshot = transaction.getOriginal();
-<<<<<<< Updated upstream
-            if (blockSnapshot.getLocation().isPresent() && !DataHandler.getFlag("explosions", blockSnapshot.getLocation().get()))
-    		{
-=======
             if (blockSnapshot.getLocation().isPresent() &&
 
             		ConfigHandler.getNode("worlds").getNode(transaction.getOriginal().getLocation().get().getExtent().getName()).getNode("enabled").getBoolean() &&
@@ -112,7 +104,6 @@ public class ExplosionListener
 				}
 
 
->>>>>>> Stashed changes
             	transaction.setValid(false);
     		}
 		}

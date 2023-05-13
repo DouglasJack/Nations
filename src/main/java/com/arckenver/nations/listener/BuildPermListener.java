@@ -1,7 +1,5 @@
 package com.arckenver.nations.listener;
 
-<<<<<<< Updated upstream
-=======
 import com.arckenver.nations.object.Nation;
 import com.arckenver.nations.object.War;
 import org.spongepowered.api.block.BlockTypes;
@@ -9,14 +7,13 @@ import org.spongepowered.api.block.trait.BooleanTraits;
 import org.spongepowered.api.block.trait.EnumTraits;
 import org.spongepowered.api.block.trait.IntegerTrait;
 import org.spongepowered.api.block.trait.IntegerTraits;
->>>>>>> Stashed changes
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.event.block.CollideBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
-import org.spongepowered.api.event.cause.EventContextKeys;
 import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 import org.spongepowered.api.event.entity.SpawnEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
@@ -45,7 +42,6 @@ public class BuildPermListener
 
 		event
 		.getTransactions()
-		.stream()
 		.forEach(trans -> trans.getOriginal().getLocation().ifPresent(loc -> {
 
 
@@ -63,8 +59,6 @@ public class BuildPermListener
 					&& !ConfigHandler.isWhitelisted("build", trans.getFinal().getState().getType().getId())
 					&& !DataHandler.getPerm("build", player.getUniqueId(), loc))
 			{
-<<<<<<< Updated upstream
-=======
 				// CHECK IF THE PLAYER CAN INTERACT WITH THESE ITEMS WITHOUT PERMISSIONS.
 				if(trans.getOriginal().getState().getType().equals(BlockTypes.WOODEN_PRESSURE_PLATE)
 						|| trans.getOriginal().getState().getType().equals(BlockTypes.STONE_PRESSURE_PLATE)
@@ -75,7 +69,6 @@ public class BuildPermListener
 					return;
 				}
 
->>>>>>> Stashed changes
 				trans.setValid(false);
 				try {
 					player.sendMessage(Text.of(TextColors.RED, LanguageHandler.ERROR_PERM_BUILD));
@@ -91,9 +84,9 @@ public class BuildPermListener
 		{
 			return;
 		}
-		if (Utils.isFakePlayer(event)) {
-			return;
-		}
+		//if (Utils.isFakePlayer(event)) {
+		//	return;
+		//}
 		for (Location<World> loc : event.getLocations()) {
 			Nation insideNation = DataHandler.getNation(loc);
 			Nation playerNation = DataHandler.getNationOfPlayer(player.getUniqueId());
@@ -164,7 +157,6 @@ public class BuildPermListener
 		}
 		event
 		.getTransactions()
-		.stream()
 		.forEach(trans -> trans.getOriginal().getLocation().ifPresent(loc -> {
 
 
@@ -173,9 +165,6 @@ public class BuildPermListener
 			if (!ConfigHandler.isWhitelisted("break", trans.getFinal().getState().getType().getId())
 					&& ConfigHandler.getNode("worlds").getNode(trans.getFinal().getLocation().get().getExtent().getName()).getNode("enabled").getBoolean())
 			{
-<<<<<<< Updated upstream
-				if (user == null || !DataHandler.getPerm("build", user.getUniqueId(), loc))
-=======
 				Nation insideNation = DataHandler.getNation(trans.getFinal().getLocation().get());
 				Nation playerNation = DataHandler.getNationOfPlayer(user.getPlayer().get().getUniqueId());
 				War war = playerNation.getCurrentWar();
@@ -187,10 +176,9 @@ public class BuildPermListener
 
 
 				if (user != null && !DataHandler.getPerm("build", user.getUniqueId(), loc))
->>>>>>> Stashed changes
 				{
 					trans.setValid(false);
-					if (user != null && user instanceof Player) {
+					if (user instanceof Player) {
 						try {
 							((Player) user).sendMessage(Text.of(TextColors.RED, LanguageHandler.ERROR_PERM_BUILD));
 						} catch (Exception e) {}

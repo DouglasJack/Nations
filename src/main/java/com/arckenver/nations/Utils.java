@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.Event;
-import org.spongepowered.api.event.cause.NamedCause;
+//import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.service.economy.account.Account;
 import org.spongepowered.api.service.economy.account.UniqueAccount;
@@ -50,9 +50,9 @@ public class Utils
 		return false;
 	}
 	
-	public static boolean isFakePlayer(Event event) {
-		return event.getCause().containsNamed(NamedCause.FAKE_PLAYER);
-	}
+	//public static boolean isFakePlayer(Event event) {
+	//	return event.getCause().containsNamed(NamedCause.FAKE_PLAYER);
+	//}
 	
 	public static User getUser(Event event) {
 		return event.getCause().first(User.class).orElse(null);
