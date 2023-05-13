@@ -21,7 +21,22 @@ public class WarDeserializer implements JsonDeserializer<War> {
         UUID attacker = UUID.fromString(obj.get("attacker").getAsString());
         UUID defender = UUID.fromString(obj.get("defender").getAsString());
 
-        War war = new War(uuid, attacker, defender);
+        /*
+        json.add("warEndYear", new JsonPrimitive(war.getEndDate().getYear()));
+        json.add("warEndDay", new JsonPrimitive(war.getEndDate().getDayOfYear()));
+        json.add("warEndHour", new JsonPrimitive(war.getEndDate().getHour()));
+         */
+
+        LocalDateTime lc = LocalDateTime.now();
+        if (obj.has("warEndYear") && obj.has("warEndDay") && obj.has("warEndHour")) {
+            int lastRCYear = obj.get("warEndYear").getAsInt();
+            int lastRCDay = obj.get("warEndDay").getAsInt();
+            int lastRCHour = obj.get("warEndHour").getAsInt();
+            int lastRCMinute = obj.get("warEndMinute").getAsInt();
+            lc = LocalDateTime.of(LocalDate.ofYearDay(lastRCYear, lastRCDay), LocalTime.of(lastRCHour, lastRCMinute));
+        }
+
+        War war = new War(uuid, attacker, defender,lc);
 
         return war;
     }

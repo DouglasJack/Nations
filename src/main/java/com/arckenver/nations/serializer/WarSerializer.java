@@ -17,6 +17,11 @@ public class WarSerializer implements JsonSerializer<War> {
         json.add("attacker", new JsonPrimitive(war.attacker.getUUID().toString()));
         json.add("defender", new JsonPrimitive(war.defender.getUUID().toString()));
 
+        json.add("warEndYear", new JsonPrimitive(war.getEndDate().getYear()));
+        json.add("warEndDay", new JsonPrimitive(war.getEndDate().getDayOfYear()));
+        json.add("warEndHour", new JsonPrimitive(war.getEndDate().getHour()));
+        json.add("warEndMinute", new JsonPrimitive(war.getEndDate().getMinute()));
+
         return json;
     }
 }

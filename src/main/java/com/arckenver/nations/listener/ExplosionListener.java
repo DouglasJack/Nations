@@ -30,34 +30,39 @@ public class ExplosionListener
 		{
 			return;
 		}
-		if (!DataHandler.getFlag("explosions", event.getExplosion().getLocation()))
-		{
+		if (!DataHandler.getFlag("explosions", event.getExplosion().getLocation())) {
+
 			Nation impactedNation = DataHandler.getNation(event.getExplosion().getLocation());
 			User usr = event.getCause().getContext().get(EventContextKeys.OWNER).orElse(null);
-			if(usr == null){
+
+			if (usr == null) {
 				event.setCancelled(true);
 				return;
 			}
 			Player plr = usr.getPlayer().get();
+			if(DataHandler.getNationOfPlayer(plr.getUniqueId()) == null){
+				return;
+			}
 
 			Nation playerNation = DataHandler.getNationOfPlayer(plr.getUniqueId());
-			if(playerNation.getCurrentWar() == null){
+			if (playerNation.getCurrentWar() == null) {
 				event.setCancelled(true);
 				return;
 			}
 
-			if(playerNation.getCurrentWar().attacker == null){
+			if (playerNation.getCurrentWar().attacker == null) {
 				event.setCancelled(true);
 				return;
 			}
-			if(playerNation.getCurrentWar().defender == null){
+			if (playerNation.getCurrentWar().defender == null) {
 				event.setCancelled(true);
 				return;
 			}
-			MessageChannel.TO_CONSOLE.send(Text.of(TextColors.AQUA, "This is a VALID war explosion: "+playerNation.getCurrentWar().attacker.getName()+" def: "+playerNation.getCurrentWar().defender.getName()));
-			if(playerNation.getCurrentWar().attacker.equals(impactedNation) || playerNation.getCurrentWar().defender.equals(impactedNation)){ // Can't believe I gotta check both, turns out people like to steal others ICBMS.
+			MessageChannel.TO_CONSOLE.send(Text.of(TextColors.AQUA, "This is a VALID war explosion: " + playerNation.getCurrentWar().attacker.getName() + " def: " + playerNation.getCurrentWar().defender.getName()));
+			if (playerNation.getCurrentWar().attacker.equals(impactedNation) || playerNation.getCurrentWar().defender.equals(impactedNation)) { // Can't believe I gotta check both, turns out people like to steal others ICBMS.
 				return;
 			}
+
 
 			event.setCancelled(true);
 		}
@@ -83,6 +88,9 @@ public class ExplosionListener
 					return;
 				}
 				Player plr = usr.getPlayer().get();
+				if(DataHandler.getNationOfPlayer(plr.getUniqueId()) == null){
+					return;
+				}
 
 				Nation playerNation = DataHandler.getNationOfPlayer(plr.getUniqueId());
 				if(playerNation.getCurrentWar() == null){

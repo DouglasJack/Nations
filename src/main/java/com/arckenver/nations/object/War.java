@@ -47,33 +47,24 @@ public class War {
         DataHandler.wars.put(uuid,this);
 
         LocalDateTime localNow = LocalDateTime.now();
-        ZonedDateTime zonedNow = ZonedDateTime.of(localNow, ZoneId.systemDefault());
-        ZonedDateTime zonedNext = zonedNow.withHour(12).withMinute(0).withSecond(0);
-        if (zonedNow.compareTo(zonedNext) > 0)
-            zonedNext = zonedNext.plusDays(1);
-        long initialDelay = Duration.between(zonedNow, zonedNext).getSeconds();
 
 
+        endDate = localNow.plusDays(1);
 
         Optional<Account> optAccount = NationsPlugin.getEcoService().getOrCreateAccount("nation-" + attacker.getUUID().toString());
         attackerBefore_balance = optAccount.get().getBalance(NationsPlugin.getEcoService().getDefaultCurrency());
         Optional<Account> optdefenderAccount = NationsPlugin.getEcoService().getOrCreateAccount("nation-" + defender.getUUID().toString());
         defenderenderBefore_balance = optdefenderAccount.get().getBalance(NationsPlugin.getEcoService().getDefaultCurrency());
 
-        // ** CONFIG ** length of days: Replace 1.
-        Sponge.getScheduler()
-                .createTaskBuilder()
-                .execute(this.endWar())
-                .delay(ConfigHandler.getNode("others", "lengthOfWars_days").getInt(), TimeUnit.DAYS)
-                .async()
-                .submit(NationsPlugin.getInstance());
+
     }
 
 
-    public War(UUID uuid, UUID attacker, UUID defender){
+    public War(UUID uuid, UUID attacker, UUID defender,LocalDateTime end){
         this.uuid = uuid;
         this.temp_attacker = attacker;
         this.temp_defender = defender;
+        this.endDate = end;
 
         DataHandler.wars.put(uuid,this);
     }
@@ -87,12 +78,14 @@ public class War {
         defender.setCurrentWar(this);
         defender.setInWar(true);
 
+        LocalDateTime localNow = LocalDateTime.now();
+        Duration remainingDuration = Duration.between(localNow, endDate);
+
         // ** CONFIG ** length of days: Replace 1.
-        Sponge.getScheduler()
-                .createTaskBuilder()
-                .execute(this.endWar())
-                .delay(ConfigHandler.getNode("others", "lengthOfWars_days").getInt(), TimeUnit.DAYS)
+        Sponge.getScheduler().createTaskBuilder()
                 .async()
+                .execute(this::endWar)
+                .delay(remainingDuration.toMinutes(), TimeUnit.MINUTES)
                 .submit(NationsPlugin.getInstance());
     }
 
@@ -156,6 +149,13 @@ public class War {
                         defender.setCurrentWar(this);
                         attacker.inWar = true;
                         defender.inWar = true;
+
+                        // ** CONFIG ** length of days: Replace 1.
+                        Sponge.getScheduler().createTaskBuilder()
+                                .async()
+                                .execute(this::endWar)
+                                .delay(1, TimeUnit.MINUTES)
+                                .submit(NationsPlugin.getInstance());
                     })).build(),
                     Text.builder().append(Text.of(TextColors.RED, "No")).onClick(TextActions.executeCallback(src -> {
                         src.sendMessage(Text.of("You have denied the war request.."));
@@ -180,6 +180,8 @@ public class War {
         attacker.inWar = false; // Honestly not needed, was needed during developing. Don't want to remove it.
         defender.inWar = false;
 
+        DataHandler.wars.remove(this);
+
         List<Player> players = new ArrayList<>(Sponge.getServer().getOnlinePlayers());
         List<Text> messages = Arrays.asList(
                 Text.builder().append(Text.of(TextColors.GREEN,"A WAR HAS ENDED!")).build(),
@@ -197,5 +199,13 @@ public class War {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
     }
 }

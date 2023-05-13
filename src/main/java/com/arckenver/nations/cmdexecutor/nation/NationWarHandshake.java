@@ -70,6 +70,7 @@ public class NationWarHandshake implements CommandExecutor {
             NW.war_Handshake();
         }else{
             //src.sendMessage(Text.of(TextColors.RED,"You or the other nation do not meet war requirements"));
+            DataHandler.wars.remove(NW);
         }
 
 

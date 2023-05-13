@@ -35,13 +35,15 @@ public class InteractPermListener
 		{
 			return;
 		}
-		Nation nation = DataHandler.getNationOfPlayer(player.getUniqueId());
-		Nation blocknation = DataHandler.getNation(event.getTargetLocation());
+		if(DataHandler.getNationOfPlayer(player.getUniqueId()) != null) {
+			Nation nation = DataHandler.getNationOfPlayer(player.getUniqueId());
+			Nation blocknation = DataHandler.getNation(event.getTargetLocation());
 
-		if(nation.getCurrentWar() != null){
-			if(nation.getCurrentWar().attacker != null && nation.getCurrentWar().defender != null){
-				if(nation.getCurrentWar().attacker.equals(blocknation) || nation.getCurrentWar().defender.equals(blocknation)){
-					return;
+			if (nation.getCurrentWar() != null) {
+				if (nation.getCurrentWar().attacker != null && nation.getCurrentWar().defender != null) {
+					if (nation.getCurrentWar().attacker.equals(blocknation) || nation.getCurrentWar().defender.equals(blocknation)) {
+						return;
+					}
 				}
 			}
 		}
@@ -68,13 +70,15 @@ public class InteractPermListener
 		if (optItem.isPresent() && (ConfigHandler.isWhitelisted("use", optItem.get().getType().getId()) || optItem.get().getType().equals(ItemTypes.GOLDEN_AXE) && ConfigHandler.getNode("others", "enableGoldenAxe").getBoolean(true)))
 			return;
 		event.getTargetBlock().getLocation().ifPresent(loc -> {
-			Nation nation = DataHandler.getNationOfPlayer(player.getUniqueId());
-			Nation blocknation = DataHandler.getNation(loc);
+			if(DataHandler.getNationOfPlayer(player.getUniqueId()) != null) {
+				Nation nation = DataHandler.getNationOfPlayer(player.getUniqueId());
+				Nation blocknation = DataHandler.getNation(loc);
 
-			if(nation.getCurrentWar() != null){
-				if(nation.getCurrentWar().attacker != null && nation.getCurrentWar().defender != null){
-					if(nation.getCurrentWar().attacker.equals(blocknation) || nation.getCurrentWar().defender.equals(blocknation)){
-						return;
+				if (nation.getCurrentWar() != null) {
+					if (nation.getCurrentWar().attacker != null && nation.getCurrentWar().defender != null) {
+						if (nation.getCurrentWar().attacker.equals(blocknation) || nation.getCurrentWar().defender.equals(blocknation)) {
+							return;
+						}
 					}
 				}
 			}
@@ -111,14 +115,15 @@ public class InteractPermListener
 			{
 				return;
 			}
+			if(DataHandler.getNationOfPlayer(player.getUniqueId()) != null) {
+				Nation nation = DataHandler.getNationOfPlayer(player.getUniqueId());
+				Nation blocknation = DataHandler.getNation(event.getTargetEntity().getLocation());
 
-			Nation nation = DataHandler.getNationOfPlayer(player.getUniqueId());
-			Nation blocknation = DataHandler.getNation(event.getTargetEntity().getLocation());
-
-			if(nation.getCurrentWar() != null){
-				if(nation.getCurrentWar().attacker != null && nation.getCurrentWar().defender != null){
-					if(nation.getCurrentWar().attacker.equals(blocknation) || nation.getCurrentWar().defender.equals(blocknation)){
-						return;
+				if (nation.getCurrentWar() != null) {
+					if (nation.getCurrentWar().attacker != null && nation.getCurrentWar().defender != null) {
+						if (nation.getCurrentWar().attacker.equals(blocknation) || nation.getCurrentWar().defender.equals(blocknation)) {
+							return;
+						}
 					}
 				}
 			}

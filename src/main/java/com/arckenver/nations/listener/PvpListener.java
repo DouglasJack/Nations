@@ -35,12 +35,14 @@ public class PvpListener
 		}
 		if (attacker != null && event.getTargetEntity().getType() == EntityTypes.PLAYER)
 		{
-			Nation insideNation = DataHandler.getNation(attacker.getLocation());
-			Nation playerNation = DataHandler.getNationOfPlayer(attacker.getUniqueId());
-			War war = playerNation.getCurrentWar();
-			if(war!=null && war.attacker != null && war.defender !=null){
-				if(war.attacker.equals(insideNation) || war.defender.equals(insideNation)){
-					return; // This enables PVP in that players claim.
+			if(DataHandler.getNationOfPlayer(attacker.getUniqueId()) != null) {
+				Nation insideNation = DataHandler.getNation(attacker.getLocation());
+				Nation playerNation = DataHandler.getNationOfPlayer(attacker.getUniqueId());
+				War war = playerNation.getCurrentWar();
+				if (war != null && war.attacker != null && war.defender != null) {
+					if (war.attacker.equals(insideNation) || war.defender.equals(insideNation)) {
+						return; // This enables PVP in that players claim.
+					}
 				}
 			}
 

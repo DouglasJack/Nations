@@ -44,13 +44,14 @@ public class BuildPermListener
 		.getTransactions()
 		.forEach(trans -> trans.getOriginal().getLocation().ifPresent(loc -> {
 
-
-			Nation insideNation = DataHandler.getNation(loc);
-			Nation playerNation = DataHandler.getNationOfPlayer(player.getUniqueId());
-			War war = playerNation.getCurrentWar();
-			if(war!=null && war.attacker != null && war.defender !=null){
-				if(war.attacker.equals(insideNation) || war.defender.equals(insideNation)){
-					return; // This allows building in claimed land during war.
+			if(DataHandler.getNationOfPlayer(player.getUniqueId()) != null) {
+				Nation insideNation = DataHandler.getNation(loc);
+				Nation playerNation = DataHandler.getNationOfPlayer(player.getUniqueId());
+				War war = playerNation.getCurrentWar();
+				if (war != null && war.attacker != null && war.defender != null) {
+					if (war.attacker.equals(insideNation) || war.defender.equals(insideNation)) {
+						return; // This allows building in claimed land during war.
+					}
 				}
 			}
 
@@ -88,12 +89,14 @@ public class BuildPermListener
 		//	return;
 		//}
 		for (Location<World> loc : event.getLocations()) {
-			Nation insideNation = DataHandler.getNation(loc);
-			Nation playerNation = DataHandler.getNationOfPlayer(player.getUniqueId());
-			War war = playerNation.getCurrentWar();
-			if(war!=null && war.attacker != null && war.defender !=null){
-				if(war.attacker.equals(insideNation) || war.defender.equals(insideNation)){
-					return; // This allows building in claimed land during war.
+			if(DataHandler.getNationOfPlayer(player.getUniqueId()) != null){
+				Nation insideNation = DataHandler.getNation(loc);
+				Nation playerNation = DataHandler.getNationOfPlayer(player.getUniqueId());
+				War war = playerNation.getCurrentWar();
+				if(war!=null && war.attacker != null && war.defender !=null){
+					if(war.attacker.equals(insideNation) || war.defender.equals(insideNation)){
+						return; // This allows building in claimed land during war.
+					}
 				}
 			}
 
@@ -123,13 +126,15 @@ public class BuildPermListener
 		.getTransactions()
 		.stream()
 		.forEach(trans -> trans.getOriginal().getLocation().ifPresent(loc -> {
-			Nation insideNation = DataHandler.getNation(trans.getFinal().getLocation().get());
-			Nation playerNation = DataHandler.getNationOfPlayer(player.getUniqueId());
-			War war = playerNation.getCurrentWar();
-			if(war!=null && war.attacker != null && war.defender !=null){
-				if(war.attacker.equals(insideNation) || war.defender.equals(insideNation)){
-					trans.setValid(true);
-					return; // This allows building in claimed land during war.
+			if(DataHandler.getNationOfPlayer(player.getUniqueId()) != null) {
+				Nation insideNation = DataHandler.getNation(trans.getFinal().getLocation().get());
+				Nation playerNation = DataHandler.getNationOfPlayer(player.getUniqueId());
+				War war = playerNation.getCurrentWar();
+				if (war != null && war.attacker != null && war.defender != null) {
+					if (war.attacker.equals(insideNation) || war.defender.equals(insideNation)) {
+						trans.setValid(true);
+						return; // This allows building in claimed land during war.
+					}
 				}
 			}
 
@@ -165,12 +170,14 @@ public class BuildPermListener
 			if (!ConfigHandler.isWhitelisted("break", trans.getFinal().getState().getType().getId())
 					&& ConfigHandler.getNode("worlds").getNode(trans.getFinal().getLocation().get().getExtent().getName()).getNode("enabled").getBoolean())
 			{
-				Nation insideNation = DataHandler.getNation(trans.getFinal().getLocation().get());
-				Nation playerNation = DataHandler.getNationOfPlayer(user.getPlayer().get().getUniqueId());
-				War war = playerNation.getCurrentWar();
-				if(war!=null && war.attacker != null && war.defender !=null){
-					if(war.attacker.equals(insideNation) || war.defender.equals(insideNation)){
-						return; // This allows building in claimed land during war.
+				if(DataHandler.getNationOfPlayer(user.getPlayer().get().getUniqueId()) != null) {
+					Nation insideNation = DataHandler.getNation(trans.getFinal().getLocation().get());
+					Nation playerNation = DataHandler.getNationOfPlayer(user.getPlayer().get().getUniqueId());
+					War war = playerNation.getCurrentWar();
+					if (war != null && war.attacker != null && war.defender != null) {
+						if (war.attacker.equals(insideNation) || war.defender.equals(insideNation)) {
+							return; // This allows building in claimed land during war.
+						}
 					}
 				}
 
@@ -199,12 +206,14 @@ public class BuildPermListener
 		{
 			return;
 		}
-		Nation insideNation = DataHandler.getNation(event.getTargetTile().getLocation());
-		Nation playerNation = DataHandler.getNationOfPlayer(player.getUniqueId());
-		War war = playerNation.getCurrentWar();
-		if(war!=null && war.attacker != null && war.defender !=null){
-			if(war.attacker.equals(insideNation) || war.defender.equals(insideNation)){
-				return; // This allows building in claimed land during war.
+		if(DataHandler.getNationOfPlayer(player.getUniqueId()) != null) {
+			Nation insideNation = DataHandler.getNation(event.getTargetTile().getLocation());
+			Nation playerNation = DataHandler.getNationOfPlayer(player.getUniqueId());
+			War war = playerNation.getCurrentWar();
+			if (war != null && war.attacker != null && war.defender != null) {
+				if (war.attacker.equals(insideNation) || war.defender.equals(insideNation)) {
+					return; // This allows building in claimed land during war.
+				}
 			}
 		}
 		if (!DataHandler.getPerm("build", player.getUniqueId(), event.getTargetTile().getLocation()))
@@ -226,13 +235,14 @@ public class BuildPermListener
 				if (!ConfigHandler.getNode("worlds").getNode(event.getEntities().get(0).getWorld().getName()).getNode("enabled").getBoolean()) {
 					return;
 				}
-
-				Nation insideNation = DataHandler.getNation(event.getEntities().get(0).getLocation());
-				Nation playerNation = DataHandler.getNationOfPlayer(player.getUniqueId());
-				War war = playerNation.getCurrentWar();
-				if(war!=null && war.attacker != null && war.defender !=null){
-					if(war.attacker.equals(insideNation) || war.defender.equals(insideNation)){
-						return; // This allows building in claimed land during war.
+				if(DataHandler.getNationOfPlayer(player.getUniqueId()) != null) {
+					Nation insideNation = DataHandler.getNation(event.getEntities().get(0).getLocation());
+					Nation playerNation = DataHandler.getNationOfPlayer(player.getUniqueId());
+					War war = playerNation.getCurrentWar();
+					if (war != null && war.attacker != null && war.defender != null) {
+						if (war.attacker.equals(insideNation) || war.defender.equals(insideNation)) {
+							return; // This allows building in claimed land during war.
+						}
 					}
 				}
 
