@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.arckenver.nations.DataHandler;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.channel.MessageChannel;
@@ -42,7 +43,16 @@ public class Nation
 	private int extras;
 	private int extraspawns;
 	private double taxes;
+<<<<<<< Updated upstream
 	
+=======
+	private int rentInterval;// hours
+	private LocalDateTime lastRentCollectTime;
+	private LocalDateTime lastWarTime = LocalDateTime.of(1999,01,5,1,1,0);
+	private War currentWar = null;
+	public boolean inWar = false;
+
+>>>>>>> Stashed changes
 	private NationMessageChannel channel = new NationMessageChannel();
 
 	public Nation(UUID uuid, String name)
@@ -60,11 +70,24 @@ public class Nation
 		this.spawns = new Hashtable<String, Location<World>>();
 		this.region = new Region();
 		this.president = null;
+<<<<<<< Updated upstream
 		this.ministers = new ArrayList<UUID>();
 		this.citizens = new ArrayList<UUID>();
 		this.flags = new Hashtable<String, Boolean>();
 		for (Entry<Object, ? extends CommentedConfigurationNode> e : ConfigHandler.getNode("nations", "flags").getChildrenMap().entrySet())
 		{
+=======
+		this.ministers = new ArrayList<>();
+		this.citizens = new ArrayList<>();
+		this.flags = new Hashtable<>();
+		this.rentInterval = ConfigHandler.getNode("nations", "defaultRentInterval").getInt();
+		this.lastRentCollectTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(LocalTime.now().getHour(), 0)); //just hours
+		this.lastWarTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(LocalTime.now().getHour(), 0)); //just hours
+		this.currentWar = null;
+		this.inWar = false;
+
+		for (Entry<Object, ? extends CommentedConfigurationNode> e : ConfigHandler.getNode("nations", "flags").getChildrenMap().entrySet()) {
+>>>>>>> Stashed changes
 			flags.put(e.getKey().toString(), e.getValue().getBoolean());
 		}
 		this.perms = new Hashtable<String, Hashtable<String, Boolean>>()
@@ -86,8 +109,21 @@ public class Nation
 		this.taxes = ConfigHandler.getNode("nations", "defaultTaxes").getDouble();
 	}
 
+<<<<<<< Updated upstream
 	public UUID getUUID()
 	{
+=======
+
+	public boolean isInWar() {
+		return inWar;
+	}
+
+	public void setInWar(boolean inWar) {
+		this.inWar = inWar;
+	}
+
+	public UUID getUUID() {
+>>>>>>> Stashed changes
 		return uuid;
 	}
 
@@ -400,10 +436,54 @@ public class Nation
 	{
 		return extras + citizens.size() * ConfigHandler.getNode("others", "blocksPerCitizen").getInt();
 	}
+<<<<<<< Updated upstream
 	
 	public NationMessageChannel getMessageChannel()
 	{
+=======
+
+	public int getRentInterval() {
+		return rentInterval;
+	}
+
+	public void setRentInterval(int rentInterval) {
+		this.rentInterval = rentInterval;
+	}
+
+	public LocalDateTime getLastRentCollectTime() {
+		return lastRentCollectTime;
+	}
+
+	public void setLastRentCollectTime(LocalDateTime lastRentCollectTime) {
+		this.lastRentCollectTime = lastRentCollectTime;
+	}
+
+	public LocalDateTime getLastWarTime() {
+		return lastWarTime;
+	}
+
+	public void setLastWarTime(LocalDateTime lastWarTime) {
+		this.lastWarTime = lastWarTime;
+	}
+
+	public NationMessageChannel getChannel() {
 		return channel;
 	}
 
+	public void setChannel(NationMessageChannel channel) {
+		this.channel = channel;
+	}
+
+	public NationMessageChannel getMessageChannel() {
+>>>>>>> Stashed changes
+		return channel;
+	}
+
+	public War getCurrentWar() {
+		return currentWar;
+	}
+
+	public void setCurrentWar(War currentWar) {
+		this.currentWar = currentWar;
+	}
 }

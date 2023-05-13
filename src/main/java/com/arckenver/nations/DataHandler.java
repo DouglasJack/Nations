@@ -13,6 +13,11 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+<<<<<<< Updated upstream
+=======
+import com.arckenver.nations.channel.AdminSpyMessageChannel;
+import com.arckenver.nations.object.*;
+>>>>>>> Stashed changes
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.effect.particle.ParticleEffect;
@@ -27,11 +32,6 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
 import com.arckenver.nations.channel.NationMessageChannel;
-import com.arckenver.nations.object.Nation;
-import com.arckenver.nations.object.Point;
-import com.arckenver.nations.object.Rect;
-import com.arckenver.nations.object.Request;
-import com.arckenver.nations.object.Zone;
 import com.arckenver.nations.serializer.NationDeserializer;
 import com.arckenver.nations.serializer.NationSerializer;
 import com.flowpowered.math.vector.Vector2i;
@@ -55,7 +55,12 @@ public class DataHandler
 	private static Hashtable<UUID, UUID> markJobs;
 	private static ArrayList<Request> inviteRequests;
 	private static ArrayList<Request> joinRequests;
+<<<<<<< Updated upstream
 	private static NationMessageChannel spyChannel;
+=======
+	private static AdminSpyMessageChannel spyChannel;
+	public static Hashtable<UUID, War> wars;
+>>>>>>> Stashed changes
 
 	public static void init(File rootDir)
 	{
@@ -89,6 +94,7 @@ public class DataHandler
 			}
 		}
 		calculateWorldChunks();
+<<<<<<< Updated upstream
 		lastNationWalkedOn = new HashMap<UUID, Nation>();
 		lastZoneWalkedOn = new HashMap<UUID, Zone>();
 		firstPoints = new Hashtable<UUID, Point>();
@@ -97,6 +103,23 @@ public class DataHandler
 		inviteRequests = new ArrayList<Request>();
 		joinRequests = new ArrayList<Request>();
 		spyChannel = new NationMessageChannel();
+=======
+		lastNationWalkedOn = new HashMap<>();
+		lastZoneWalkedOn = new HashMap<>();
+		firstPoints = new Hashtable<>();
+		secondPoints = new Hashtable<>();
+		markJobs = new Hashtable<>();
+		inviteRequests = new ArrayList<>();
+		joinRequests = new ArrayList<>();
+		spyChannel = new AdminSpyMessageChannel();
+
+		if(wars != null) {
+			for (UUID uuid : wars.keySet()) {
+				wars.get(uuid).implementAttDef();
+			}
+		}
+
+>>>>>>> Stashed changes
 	}
 
 	public static void save()
@@ -269,6 +292,7 @@ public class DataHandler
 				}
 				return nation.getPerm(Nation.TYPE_CITIZEN, perm);
 			}
+
 			return nation.getPerm(Nation.TYPE_OUTSIDER, perm);
 		}
 
@@ -618,6 +642,7 @@ public class DataHandler
 				file.createNewFile();
 			}
 			String json = gson.toJson(nation, Nation.class);
+			NationsPlugin.getLogger().debug("Saving GSON"+json);
 			Files.write(file.toPath(), json.getBytes());
 		}
 		catch (IOException e)

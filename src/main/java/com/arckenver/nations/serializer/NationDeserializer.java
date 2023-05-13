@@ -5,6 +5,8 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.arckenver.nations.DataHandler;
+import com.arckenver.nations.DataWar_Handler;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.world.World;
 
@@ -112,8 +114,34 @@ public class NationDeserializer implements JsonDeserializer<Nation>
 			}
 		}
 
+<<<<<<< Updated upstream
 		if (!isAdmin)
 		{
+=======
+		/*
+		// WAR Save values.
+		json.add("lastWarTimeYear", new JsonPrimitive(nation.getLastWarTime().getYear()));
+		json.add("lastWarTimeDay", new JsonPrimitive(nation.getLastWarTime().getDayOfYear()));
+		json.add("lastWarTimeHour", new JsonPrimitive(nation.getLastWarTime().getHour()));
+		if(nation.getCurrentWar() != null) {
+			json.add("currentWar", new JsonPrimitive(nation.getCurrentWar().getUuid().toString()));
+		}
+		json.add("inWar", new JsonPrimitive(nation.isInWar()));
+		 */
+
+		if (obj.has("lastWarTimeYear") && obj.has("lastWarTimeDay") && obj.has("lastWarTimeHour")) {
+			int lastRCYear = obj.get("lastWarTimeYear").getAsInt();
+			int lastRCDay = obj.get("lastWarTimeDay").getAsInt();
+			int lastRCHour = obj.get("lastWarTimeHour").getAsInt();
+			LocalDateTime lastRentCollect = LocalDateTime.of(LocalDate.ofYearDay(lastRCYear, lastRCDay), LocalTime.of(lastRCHour, 0));
+			nation.setLastWarTime(lastRentCollect);
+		}
+
+		//nation.setCurrentWar(DataHandler.wars.get(UUID.fromString(obj.get("currentWar").getAsString())));
+		//nation.setInWar(obj.get("inWar").getAsBoolean());
+
+		if (!isAdmin) {
+>>>>>>> Stashed changes
 			nation.setPresident(UUID.fromString(obj.get("president").getAsString()));
 			for (JsonElement element : obj.get("ministers").getAsJsonArray())
 			{

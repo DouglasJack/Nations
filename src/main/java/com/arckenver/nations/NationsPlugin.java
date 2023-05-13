@@ -1,12 +1,24 @@
 package com.arckenver.nations;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.concurrent.TimeUnit;
 
+<<<<<<< Updated upstream
+=======
+import com.arckenver.nations.channel.AdminSpyMessageChannel;
+import com.arckenver.nations.object.Nation;
+import com.arckenver.nations.object.War;
+import com.arckenver.nations.task.RentCollectRunnable;
+>>>>>>> Stashed changes
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.ConfigDir;
@@ -59,18 +71,28 @@ public class NationsPlugin
 
 		LanguageHandler.init(rootDir);
 		ConfigHandler.init(rootDir);
+		DataWar_Handler.init(rootDir);
 		DataHandler.init(rootDir);
+
 
 		Sponge.getServiceManager().setProvider(this, NationsService.class, new NationsService());
 	}
+
+
 
 	@Listener
 	public void onStart(GameStartedServerEvent event)
 	{
 		LanguageHandler.load();
 		ConfigHandler.load();
+		DataWar_Handler.load();
 		DataHandler.load();
+<<<<<<< Updated upstream
 		
+=======
+
+
+>>>>>>> Stashed changes
 		Sponge.getServiceManager()
 				.getRegistration(EconomyService.class)
 				.ifPresent(prov -> economyService = prov.getProvider());
@@ -113,6 +135,7 @@ public class NationsPlugin
 		logger.info("Saving data");
 		ConfigHandler.save();
 		DataHandler.save();
+		DataWar_Handler.save();
 		logger.info("Plugin stopped");
 	}
 

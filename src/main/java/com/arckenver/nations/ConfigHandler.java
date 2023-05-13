@@ -55,7 +55,13 @@ public class ConfigHandler
 				src.sendMessage(Text.of(TextColors.RED, LanguageHandler.ERROR_CONFIGFILE));
 			}
 		}
+<<<<<<< Updated upstream
 		
+=======
+
+
+
+>>>>>>> Stashed changes
 		// check integrity
 		Utils.ensurePositiveNumber(config.getNode("prices", "nationCreationPrice"), 2500);
 		Utils.ensurePositiveNumber(config.getNode("prices", "upkeepPerCitizen"), 100);
@@ -74,6 +80,10 @@ public class ConfigHandler
 		Utils.ensurePositiveNumber(config.getNode("others", "maxNationTagLength"), 5);
 		Utils.ensurePositiveNumber(config.getNode("others", "minZoneNameLength"), 3);
 		Utils.ensurePositiveNumber(config.getNode("others", "maxZoneNameLength"), 13);
+		Utils.ensurePositiveNumber(config.getNode("others", "lengthOfWars_days"), 1);
+		Utils.ensurePositiveNumber(config.getNode("others", "daysBetweenWars"), 1);
+		Utils.ensurePositiveNumber(config.getNode("others", "minimumCitizensToWar"), 1);
+		Utils.ensurePositiveNumber(config.getNode("others", "minimumBallanceToWar"), 5000);
 		Utils.ensureBoolean(config.getNode("others", "enableNationRanks"), true);
 		Utils.ensureBoolean(config.getNode("others", "enableNationTag"), true);
 		Utils.ensureBoolean(config.getNode("others", "enableGoldenAxe"), true);

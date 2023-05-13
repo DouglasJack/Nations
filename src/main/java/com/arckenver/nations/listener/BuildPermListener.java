@@ -1,11 +1,22 @@
 package com.arckenver.nations.listener;
 
+<<<<<<< Updated upstream
+=======
+import com.arckenver.nations.object.Nation;
+import com.arckenver.nations.object.War;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.block.trait.BooleanTraits;
+import org.spongepowered.api.block.trait.EnumTraits;
+import org.spongepowered.api.block.trait.IntegerTrait;
+import org.spongepowered.api.block.trait.IntegerTraits;
+>>>>>>> Stashed changes
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.User;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
+import org.spongepowered.api.event.cause.EventContextKeys;
 import org.spongepowered.api.event.cause.entity.spawn.SpawnTypes;
 import org.spongepowered.api.event.entity.SpawnEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
@@ -29,14 +40,42 @@ public class BuildPermListener
 		{
 			return;
 		}
+
+
+
 		event
 		.getTransactions()
 		.stream()
 		.forEach(trans -> trans.getOriginal().getLocation().ifPresent(loc -> {
+
+
+			Nation insideNation = DataHandler.getNation(loc);
+			Nation playerNation = DataHandler.getNationOfPlayer(player.getUniqueId());
+			War war = playerNation.getCurrentWar();
+			if(war!=null && war.attacker != null && war.defender !=null){
+				if(war.attacker.equals(insideNation) || war.defender.equals(insideNation)){
+					return; // This allows building in claimed land during war.
+				}
+			}
+
+
 			if (ConfigHandler.getNode("worlds").getNode(trans.getFinal().getLocation().get().getExtent().getName()).getNode("enabled").getBoolean()
 					&& !ConfigHandler.isWhitelisted("build", trans.getFinal().getState().getType().getId())
 					&& !DataHandler.getPerm("build", player.getUniqueId(), loc))
 			{
+<<<<<<< Updated upstream
+=======
+				// CHECK IF THE PLAYER CAN INTERACT WITH THESE ITEMS WITHOUT PERMISSIONS.
+				if(trans.getOriginal().getState().getType().equals(BlockTypes.WOODEN_PRESSURE_PLATE)
+						|| trans.getOriginal().getState().getType().equals(BlockTypes.STONE_PRESSURE_PLATE)
+						|| trans.getOriginal().getState().getType().equals(BlockTypes.HEAVY_WEIGHTED_PRESSURE_PLATE)
+						|| trans.getOriginal().getState().getType().equals(BlockTypes.LIGHT_WEIGHTED_PRESSURE_PLATE)
+				        || trans.getOriginal().getState().getType().equals(BlockTypes.REDSTONE_WIRE))
+				{
+					return;
+				}
+
+>>>>>>> Stashed changes
 				trans.setValid(false);
 				try {
 					player.sendMessage(Text.of(TextColors.RED, LanguageHandler.ERROR_PERM_BUILD));
@@ -56,6 +95,17 @@ public class BuildPermListener
 			return;
 		}
 		for (Location<World> loc : event.getLocations()) {
+			Nation insideNation = DataHandler.getNation(loc);
+			Nation playerNation = DataHandler.getNationOfPlayer(player.getUniqueId());
+			War war = playerNation.getCurrentWar();
+			if(war!=null && war.attacker != null && war.defender !=null){
+				if(war.attacker.equals(insideNation) || war.defender.equals(insideNation)){
+					return; // This allows building in claimed land during war.
+				}
+			}
+
+
+
 			if (ConfigHandler.getNode("worlds").getNode(loc.getExtent().getName()).getNode("enabled").getBoolean()
 					&& !ConfigHandler.isWhitelisted("break", loc.getBlock().getId())
 					&& !DataHandler.getPerm("build", player.getUniqueId(), loc))
@@ -80,6 +130,17 @@ public class BuildPermListener
 		.getTransactions()
 		.stream()
 		.forEach(trans -> trans.getOriginal().getLocation().ifPresent(loc -> {
+			Nation insideNation = DataHandler.getNation(trans.getFinal().getLocation().get());
+			Nation playerNation = DataHandler.getNationOfPlayer(player.getUniqueId());
+			War war = playerNation.getCurrentWar();
+			if(war!=null && war.attacker != null && war.defender !=null){
+				if(war.attacker.equals(insideNation) || war.defender.equals(insideNation)){
+					trans.setValid(true);
+					return; // This allows building in claimed land during war.
+				}
+			}
+
+
 			if (ConfigHandler.getNode("worlds").getNode(trans.getFinal().getLocation().get().getExtent().getName()).getNode("enabled").getBoolean()
 					&& !ConfigHandler.isWhitelisted("build", trans.getFinal().getState().getType().getId())
 					&& !DataHandler.getPerm("build", player.getUniqueId(), loc))
@@ -105,10 +166,28 @@ public class BuildPermListener
 		.getTransactions()
 		.stream()
 		.forEach(trans -> trans.getOriginal().getLocation().ifPresent(loc -> {
+
+
+
+
 			if (!ConfigHandler.isWhitelisted("break", trans.getFinal().getState().getType().getId())
 					&& ConfigHandler.getNode("worlds").getNode(trans.getFinal().getLocation().get().getExtent().getName()).getNode("enabled").getBoolean())
 			{
+<<<<<<< Updated upstream
 				if (user == null || !DataHandler.getPerm("build", user.getUniqueId(), loc))
+=======
+				Nation insideNation = DataHandler.getNation(trans.getFinal().getLocation().get());
+				Nation playerNation = DataHandler.getNationOfPlayer(user.getPlayer().get().getUniqueId());
+				War war = playerNation.getCurrentWar();
+				if(war!=null && war.attacker != null && war.defender !=null){
+					if(war.attacker.equals(insideNation) || war.defender.equals(insideNation)){
+						return; // This allows building in claimed land during war.
+					}
+				}
+
+
+				if (user != null && !DataHandler.getPerm("build", user.getUniqueId(), loc))
+>>>>>>> Stashed changes
 				{
 					trans.setValid(false);
 					if (user != null && user instanceof Player) {
@@ -132,6 +211,14 @@ public class BuildPermListener
 		{
 			return;
 		}
+		Nation insideNation = DataHandler.getNation(event.getTargetTile().getLocation());
+		Nation playerNation = DataHandler.getNationOfPlayer(player.getUniqueId());
+		War war = playerNation.getCurrentWar();
+		if(war!=null && war.attacker != null && war.defender !=null){
+			if(war.attacker.equals(insideNation) || war.defender.equals(insideNation)){
+				return; // This allows building in claimed land during war.
+			}
+		}
 		if (!DataHandler.getPerm("build", player.getUniqueId(), event.getTargetTile().getLocation()))
 		{
 			event.setCancelled(true);
@@ -148,8 +235,19 @@ public class BuildPermListener
 		if (event.getCause().contains(SpawnTypes.PLACEMENT))
 		{
 			try {
-				if (!ConfigHandler.getNode("worlds").getNode(event.getEntities().get(0).getWorld().getName()).getNode("enabled").getBoolean())
+				if (!ConfigHandler.getNode("worlds").getNode(event.getEntities().get(0).getWorld().getName()).getNode("enabled").getBoolean()) {
 					return;
+				}
+
+				Nation insideNation = DataHandler.getNation(event.getEntities().get(0).getLocation());
+				Nation playerNation = DataHandler.getNationOfPlayer(player.getUniqueId());
+				War war = playerNation.getCurrentWar();
+				if(war!=null && war.attacker != null && war.defender !=null){
+					if(war.attacker.equals(insideNation) || war.defender.equals(insideNation)){
+						return; // This allows building in claimed land during war.
+					}
+				}
+
 				if (!ConfigHandler.isWhitelisted("spawn", event.getEntities().get(0).getType().getId())
 						&& !DataHandler.getPerm("build", player.getUniqueId(), event.getEntities().get(0).getLocation()))
 					event.setCancelled(true);

@@ -159,6 +159,15 @@ public class NationSerializer implements JsonSerializer<Nation>
 		}
 		json.add("citizens", citizensArray);
 
+		// WAR Save values.
+		json.add("lastWarTimeYear", new JsonPrimitive(nation.getLastWarTime().getYear()));
+		json.add("lastWarTimeDay", new JsonPrimitive(nation.getLastWarTime().getDayOfYear()));
+		json.add("lastWarTimeHour", new JsonPrimitive(nation.getLastWarTime().getHour()));
+		if(nation.getCurrentWar() != null) {
+			json.add("currentWar", new JsonPrimitive(nation.getCurrentWar().getUuid().toString()));
+		}
+		json.add("inWar", new JsonPrimitive(nation.isInWar()));
+
 		return json;
 	}
 }
