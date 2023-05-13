@@ -43,7 +43,10 @@ public class DataWar_Handler {
                 {
                     String json = new String(Files.readAllBytes(f.toPath()));
                     War war = gson.fromJson(json, War.class);
-                    wars.put(war.getUuid(), war);
+                    if(!war.getDisabled()) {
+                        wars.put(war.getUuid(), war);
+                    }
+
                 }
                 catch (IOException e)
                 {

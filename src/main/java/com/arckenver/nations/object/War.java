@@ -12,14 +12,13 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.economy.account.Account;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
+import org.spongepowered.api.text.channel.MessageChannel;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.io.File;
 import java.math.BigDecimal;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -37,14 +36,14 @@ public class War {
 
     private LocalDateTime endDate;
 
-
+    private Boolean isDisabled = false;
 
 
     public War(UUID uuid,Nation attacker, Nation defender){
         this.uuid = uuid;
         this.attacker = attacker;
         this.defender = defender;
-        DataHandler.wars.put(uuid,this);
+
 
         LocalDateTime localNow = LocalDateTime.now();
 
@@ -61,6 +60,10 @@ public class War {
 
 
     public War(UUID uuid, UUID attacker, UUID defender,LocalDateTime end){
+        LocalDateTime localNow = LocalDateTime.now();
+        if(end.isAfter(localNow)){
+            isDisabled = true;
+        } // We'd like to keep a log of previous wars, so this will just ignore old ones.
         this.uuid = uuid;
         this.temp_attacker = attacker;
         this.temp_defender = defender;
@@ -82,23 +85,38 @@ public class War {
         Duration remainingDuration = Duration.between(localNow, endDate);
 
         // ** CONFIG ** length of days: Replace 1.
-        Sponge.getScheduler().createTaskBuilder()
-                .async()
-                .execute(this::endWar)
-                .delay(remainingDuration.toMinutes(), TimeUnit.MINUTES)
-                .submit(NationsPlugin.getInstance());
+
+        //MessageChannel.TO_CONSOLE.send(Text.of("War time remaining: "+(remainingDuration.toMillis())/1000));
+        if(remainingDuration.toMinutes() > 0){
+            Sponge.getScheduler().createTaskBuilder()
+                    .async()
+                    .execute(this::endWar)
+                    .delay(remainingDuration.toMinutes(), TimeUnit.MINUTES)
+                    .submit(NationsPlugin.getInstance());
+        }else{
+            endWar();
+        }
     }
 
     // This really shouldn't be in here, but eh.
     public boolean canWar(){
         // Checks to see if both nations have the requirements to go into a war.
-
-        /// ** CONFUG ** plusDays between wars.
-        LocalDateTime localNow = LocalDateTime.now();
-        if((attacker.getLastWarTime().plusDays(1).isBefore(localNow) && defender.getLastWarTime().plusDays(1).isBefore(localNow))){
-            ((Player) Sponge.getServer().getPlayer(attacker.getPresident()).orElse(null)).sendMessage(Text.of(TextColors.RED,"You or your enemy have been in a war too recently."+attacker.getLastWarTime().plusDays(1)));
+        if(attacker.equals(defender)){
+            ((Player) Sponge.getServer().getPlayer(attacker.getPresident()).orElse(null)).sendMessage(Text.of(TextColors.RED,"Why would you like to war yourself?"));
             return false;
         }
+        if(attacker.getCurrentWar() != null || defender.getCurrentWar() != null){
+            ((Player) Sponge.getServer().getPlayer(attacker.getPresident()).orElse(null)).sendMessage(Text.of(TextColors.RED,"You or your enemy are currently in a war."));
+            return false;
+        }
+        /// ** CONFUG ** plusDays between wars.
+        LocalDateTime localNow = LocalDateTime.now();
+
+        if((attacker.getLastWarTime().plusDays(1).isAfter(localNow) && defender.getLastWarTime().plusDays(1).isAfter(localNow))){
+            ((Player) Sponge.getServer().getPlayer(attacker.getPresident()).orElse(null)).sendMessage(Text.of(TextColors.RED,"You or your enemy have been in a war too recently. "+endDate));
+            return false;
+        }
+
         /// ** CONFIG ** allow of users to set the minimum citizens required to war.
         if(!(attacker.getCitizens().size() > 0 && defender.getCitizens().size() > 0)){
             ((Player) Sponge.getServer().getPlayer(attacker.getPresident()).orElse(null)).sendMessage(Text.of(TextColors.RED,"You or your enemy do not have enough citizens to initate a war."));
@@ -144,11 +162,13 @@ public class War {
                         // ** CONFIG **  (daysBetweenWarDelay * warLengthDays)
                         attacker.setLastWarTime(localNow.plusDays(1 * 1));
                         defender.setLastWarTime(localNow.plusDays(1 * 1));
-                        endDate = localNow.plusDays(1 * 1);
+                        endDate = localNow.plusMinutes(5);
                         attacker.setCurrentWar(this);
                         defender.setCurrentWar(this);
                         attacker.inWar = true;
                         defender.inWar = true;
+
+                        DataHandler.wars.put(uuid,this);
 
                         // ** CONFIG ** length of days: Replace 1.
                         Sponge.getScheduler().createTaskBuilder()
@@ -179,6 +199,8 @@ public class War {
         defender.setLastWarTime(localNow);
         attacker.inWar = false; // Honestly not needed, was needed during developing. Don't want to remove it.
         defender.inWar = false;
+        attacker.setCurrentWar(null);
+        defender.setCurrentWar(null);
 
         DataHandler.wars.remove(this);
 
@@ -207,5 +229,9 @@ public class War {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public Boolean getDisabled() {
+        return isDisabled;
     }
 }
