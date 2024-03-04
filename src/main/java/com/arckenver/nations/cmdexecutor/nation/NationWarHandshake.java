@@ -29,7 +29,20 @@ public class NationWarHandshake implements CommandExecutor {
                 .build(), "war");
     }
 
+    private static void warStatus(CommandSource src){
+        src.sendMessage(Text.of("Intend to war another nation? use /n war <nation name>"));
+        src.sendMessage(Text.of(TextColors.DARK_AQUA," == Current War Status == "));
+        if(DataHandler.getNationOfPlayer( ((Player) src).getUniqueId()) != null && DataHandler.getNationOfPlayer( ((Player) src).getUniqueId()).getCurrentWar() != null){
+            War currentWar = DataHandler.getNationOfPlayer( ((Player) src).getUniqueId()).getCurrentWar();
+            src.sendMessage(Text.of(TextColors.RED,"You are currently engaged in an ongoing conflict."));
+            src.sendMessage(Text.of(TextColors.RED,currentWar.attacker.getName() + " vs " + currentWar.defender.getName()));
+            src.sendMessage(Text.of(TextColors.RED,"This engagement will end on: "+currentWar.getEndDate()));
+        }else{
+            src.sendMessage(Text.of("No active conflicts."));
+        }
 
+        src.sendMessage(Text.of(TextColors.DARK_AQUA,"========================"));
+    }
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         if (!(src instanceof Player)){return CommandResult.success();}
@@ -37,7 +50,7 @@ public class NationWarHandshake implements CommandExecutor {
 
         Player player = (Player) src;
         Nation nation = DataHandler.getNationOfPlayer(player.getUniqueId());
-        src.sendMessage(Text.of(TextColors.RED,"WAR STATUS: "+nation.getCurrentWar()));
+        //src.sendMessage(Text.of(TextColors.RED,"WAR STATUS: "+nation.getCurrentWar()));
         if(!nation.getPresident().equals(player.getUniqueId())){
             src.sendMessage(Text.of(TextColors.RED,"Speak to your nation leader to initiate a war."+nation.getPresident()+" -> "+player.getUniqueId()));
             return CommandResult.success();
@@ -49,7 +62,7 @@ public class NationWarHandshake implements CommandExecutor {
         }
 
         if (!args.<String>getOne("nation").isPresent()){
-            src.sendMessage(Text.of(TextColors.YELLOW, "/n war <nation>"));
+            warStatus(src);
             return CommandResult.success();
         }
 

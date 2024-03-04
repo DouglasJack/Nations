@@ -164,13 +164,10 @@ public class BuildPermListener
 		.getTransactions()
 		.forEach(trans -> trans.getOriginal().getLocation().ifPresent(loc -> {
 
-
-
-
 			if (!ConfigHandler.isWhitelisted("break", trans.getFinal().getState().getType().getId())
 					&& ConfigHandler.getNode("worlds").getNode(trans.getFinal().getLocation().get().getExtent().getName()).getNode("enabled").getBoolean())
 			{
-				if(DataHandler.getNationOfPlayer(user.getPlayer().get().getUniqueId()) != null) {
+				if(user != null && DataHandler.getNationOfPlayer(user.getPlayer().get().getUniqueId()) != null) {
 					Nation insideNation = DataHandler.getNation(trans.getFinal().getLocation().get());
 					Nation playerNation = DataHandler.getNationOfPlayer(user.getPlayer().get().getUniqueId());
 					War war = playerNation.getCurrentWar();

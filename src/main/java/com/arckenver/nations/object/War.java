@@ -76,6 +76,10 @@ public class War {
         attacker = DataHandler.getNation(temp_attacker);
         defender = DataHandler.getNation(temp_defender);
 
+        if(attacker == null || defender == null){
+            return;
+        }
+
         attacker.setCurrentWar(this);
         attacker.setInWar(true);
         defender.setCurrentWar(this);
@@ -109,7 +113,7 @@ public class War {
             ((Player) Sponge.getServer().getPlayer(attacker.getPresident()).orElse(null)).sendMessage(Text.of(TextColors.RED,"You or your enemy are currently in a war."));
             return false;
         }
-        /// ** CONFUG ** plusDays between wars.
+        /// ** CONFIG ** plusDays between wars.
         LocalDateTime localNow = LocalDateTime.now();
 
         if((attacker.getLastWarTime().plusDays(1).isAfter(localNow) && defender.getLastWarTime().plusDays(1).isAfter(localNow))){
@@ -118,7 +122,7 @@ public class War {
         }
 
         /// ** CONFIG ** allow of users to set the minimum citizens required to war.
-        if(!(attacker.getCitizens().size() > 0 && defender.getCitizens().size() > 0)){
+        if(!(attacker.getCitizens().size() > 3 && defender.getCitizens().size() > 3)){
             ((Player) Sponge.getServer().getPlayer(attacker.getPresident()).orElse(null)).sendMessage(Text.of(TextColors.RED,"You or your enemy do not have enough citizens to initate a war."));
             return false;
         }

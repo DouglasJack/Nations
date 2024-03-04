@@ -2,8 +2,10 @@ package com.arckenver.nations.listener;
 
 import com.arckenver.nations.object.Nation;
 import com.arckenver.nations.object.War;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
@@ -13,6 +15,8 @@ import org.spongepowered.api.event.filter.cause.All;
 
 import com.arckenver.nations.ConfigHandler;
 import com.arckenver.nations.DataHandler;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 
 public class PvpListener
 {
@@ -41,6 +45,19 @@ public class PvpListener
 				War war = playerNation.getCurrentWar();
 				if (war != null && war.attacker != null && war.defender != null) {
 					if (war.attacker.equals(insideNation) || war.defender.equals(insideNation)) {
+						// We are inside of a nation so we can log the death for this player to the current war nation stats handler.
+						if(war.attacker.equals(playerNation)){
+							// Player is the attacker.
+							if(((Player) event.getTargetEntity()).getHealthData().health().get() <= 0){
+								Sponge.getServer().getPlayer(attacker.getUniqueId()).get().sendMessage(Text.of(TextColors.RED,"You killed an enemy combatant"));
+							}
+						}else{
+							// Player is the defender.
+							if(((Player) event.getTargetEntity()).getHealthData().health().get() <= 0){
+								Sponge.getServer().getPlayer(attacker.getUniqueId()).get().sendMessage(Text.of(TextColors.RED,"You killed an enemy combatant"));
+
+							}
+						}
 						return; // This enables PVP in that players claim.
 					}
 				}

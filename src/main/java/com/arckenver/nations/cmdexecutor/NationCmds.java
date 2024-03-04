@@ -42,6 +42,10 @@ public class NationCmds {
 				.permission("nations.command.nationworld.execute")
 				.executor(new NationworldExecutor());
 
+		CommandSpec.Builder vote = CommandSpec.builder()
+				.description(Text.of(""))
+				.executor(new VoteCommand());
+
 		createCmds(nationCmd, "com.arckenver.nations.cmdexecutor.nation");
 		createCmds(nationadminCmd, "com.arckenver.nations.cmdexecutor.nationadmin");
 		createCmds(zoneCmd, "com.arckenver.nations.cmdexecutor.zone");
@@ -51,6 +55,7 @@ public class NationCmds {
 		Sponge.getCommandManager().register(plugin, nationCmd.build(), "nation", "n", "nations");
 		Sponge.getCommandManager().register(plugin, zoneCmd.build(), "zone", "z");
 		Sponge.getCommandManager().register(plugin, nationworldCmd.build(), "nationworld", "nw");
+		Sponge.getCommandManager().register(plugin,vote.build(),"vote","votes");
 	}
 
 	private static void createCmds(CommandSpec.Builder cmd, String path)

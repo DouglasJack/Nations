@@ -74,6 +74,10 @@ public class DataWar_Handler {
             NationsPlugin.getLogger().warn("Trying to save null war !");
             return;
         }
+        if(war.attacker == null || war.defender == null){
+            NationsPlugin.getLogger().warn("Trying to save null war !");
+            return;
+        }
         File file = new File(warDir, uuid.toString() + ".json");
         try
         {
